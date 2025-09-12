@@ -1,29 +1,7 @@
-// ====== CONFIG - replace these URLs with your published CSV URLs ======
-// const PLAYERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzNnP5CEIBKzDrPsMMduIrFPxBCjWAQLGlfhDN0XUEcKrEtuY1HGFw5Kex9VpivvctV9V0mOuMnp_W/pub?gid=0&single=true&output=csv";
-// const MATCHES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzNnP5CEIBKzDrPsMMduIrFPxBCjWAQLGlfhDN0XUEcKrEtuY1HGFw5Kex9VpivvctV9V0mOuMnp_W/pub?gid=428108000&single=true&output=csv";
-// // =========================================================================
 
-const DEFAULT_WIN_POINTS = 3;
 
-// --- small CSV parser that respects quoted fields ---
-function parseCSV(text) {
-  const rows = text.trim().split('\n').map(r => r.replace(/\r$/, ''));
-  const header = rows.shift().split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(h=>h.replace(/^"|"$/g, '').trim());
-  const data = rows.map(row => {
-    const cols = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c=>c.replace(/^"|"$/g, '').trim());
-    const obj = {};
-    header.forEach((h,i)=> obj[h] = cols[i]===undefined ? '' : cols[i]);
-    return obj;
-  });
-  return data;
-}
 
-async function fetchCSV(url){
-  const res = await fetch(url);
-  if(!res.ok) throw new Error('Failed to fetch: '+res.status);
-  const txt = await res.text();
-  return parseCSV(txt);
-}
+
 
 // ====== Supabase config ======
 // Add this to your HTML: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
