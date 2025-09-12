@@ -1,7 +1,7 @@
 // tournament.js: shared logic for data fetching, parsing, and stats
-const PLAYERS_CSV_URL = "YOUR_PLAYERS_CSV_URL";
-const MATCHES_CSV_URL = "YOUR_MATCHES_CSV_URL";
-const DEFAULT_WIN_POINTS = 3;
+// const PLAYERS_CSV_URL = "YOUR_PLAYERS_CSV_URL";
+// const MATCHES_CSV_URL = "YOUR_MATCHES_CSV_URL";
+// const DEFAULT_WIN_POINTS = 3;
 
 function parseCSV(text) {
   const rows = text.trim().split('\n').map(r => r.replace(/\r$/, ''));
