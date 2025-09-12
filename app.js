@@ -216,6 +216,54 @@ function renderMatches(filterPlayer = 'all') {
   });
 }
 
+function renderUpcomingMatches() {
+  if (!matches.length) return;
+  // Find all unique matchdays, sorted
+  const matchdays = Array.from(new Set(matches.map(m => m.matchday).filter(Boolean))).sort((a, b) => {
+    // Try to sort numerically if possible
+    const na = parseInt(a.replace(/\D/g, ''));
+    const nb = parseInt(b.replace(/\D/g, ''));
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return a.localeCompare(b);
+  });
+  // Find the latest matchday with a winner (completed)
+  let lastCompleted = null;
+  for (let i = matchdays.length - 1; i >= 0; i--) {
+    if (matches.some(m => m.matchday === matchdays[i] && m.winner_team_id)) {
+      lastCompleted = matchdays[i];
+      break;
+    }
+  }
+  // Next matchday is the one after lastCompleted
+  let nextMatchday = null;
+  if (lastCompleted) {
+    const idx = matchdays.indexOf(lastCompleted);
+    if (idx !== -1 && idx + 1 < matchdays.length) {
+      nextMatchday = matchdays[idx + 1];
+    }
+  } else if (matchdays.length) {
+    nextMatchday = matchdays[0];
+  }
+  const ul = document.getElementById('upcomingMatchesList');
+  ul.innerHTML = '';
+  if (!nextMatchday) {
+    ul.innerHTML = '<li>No upcoming matches scheduled.</li>';
+    return;
+  }
+  const upcoming = matches.filter(m => m.matchday === nextMatchday);
+  if (!upcoming.length) {
+    ul.innerHTML = '<li>No upcoming matches scheduled.</li>';
+    return;
+  }
+  upcoming.forEach(m => {
+    const li = document.createElement('li');
+    const aTeam = teamIdToNames(m.team_a_id);
+    const bTeam = teamIdToNames(m.team_b_id);
+    li.innerHTML = `<strong>${aTeam}</strong> vs <strong>${bTeam}</strong> (${nextMatchday})`;
+    ul.appendChild(li);
+  });
+}
+
 function renderPlayerSummary(playerId) {
   if (!playerId || playerId === 'all') {
     document.getElementById('playerSummary').hidden = true;
@@ -255,6 +303,7 @@ async function loadAll() {
     renderLeaderboard(standings);
     renderPlayerFilter(standings);
     renderMatches();
+    renderUpcomingMatches(); // <-- add this line
   } catch (err) {
     alert('Error loading data: ' + err.message);
     console.error(err);
