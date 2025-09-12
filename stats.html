@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stats | Badminton Tournament Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('navbar.html').then(r => r.text()).then(html => {
+        const nav = document.createElement('div');
+        nav.innerHTML = html;
+        document.body.insertBefore(nav, document.body.firstChild);
+      });
+    });
+  </script>
 </head>
 <body>
+  <!-- Navbar will be injected here -->
   <header class="site-header">
     <h1>Player & Matchday Stats</h1>
     <a href="index.html" class="btn-main">&larr; Home</a>

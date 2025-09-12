@@ -5,28 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Badminton Tournament Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('navbar.html').then(r => r.text()).then(html => {
+        const nav = document.createElement('div');
+        nav.innerHTML = html;
+        document.body.insertBefore(nav, document.body.firstChild);
+      });
+    });
+  </script>
 </head>
 <body>
-  <nav class="main-navbar">
-    <div class="navbar-container">
-      <a href="index.html" class="navbar-logo">🏸 Tournament</a>
-      <button class="navbar-toggle" aria-label="Toggle menu">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </button>
-      <ul class="navbar-links">
-        <li><a href="index.html">HOME</a></li>
-        <li><a href="stats.html">STATS</a></li>
-        <li><a href="#contact">CONTACT</a></li>
-        <li><a href="#gallery">GALLERY</a></li>
-      </ul>
-    </div>
-  </nav>
-
+  <!-- Navbar will be injected here -->
   <header class="site-header">
-    <h1>Badminton Tournament Tracker</h1>
-    <p class="subtitle">League + Knockout — weekly updates via Google Sheets</p>
+    <h1>Yamlok Badminton League</h1>
   </header>
 
   <main class="container">
