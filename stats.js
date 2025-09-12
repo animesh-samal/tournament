@@ -101,21 +101,33 @@ function sortStandings(arr) {
 
 function renderPlayerStats(standings) {
   const section = document.getElementById('playerStatsSection');
-  let html = '<table class="player-table"><thead><tr><th>#</th><th>Player</th><th>MP</th><th>W</th><th>L</th><th>Pts</th><th>Win %</th></tr></thead><tbody>';
+  let html = '<div class="player-cards">';
   standings.forEach((p, i) => {
-    html += `<tr><td>${i + 1}</td><td>${p.name}</td><td>${p.matches_played}</td><td>${p.wins}</td><td>${p.losses}</td><td>${p.points}</td><td>${p.win_pct}%</td></tr>`;
+    html += `<div class="player-card">
+      <div class="player-rank">#${i + 1}</div>
+      <div class="player-name">${p.name}</div>
+      <div class="player-meta">MP: ${p.matches_played} | W: ${p.wins} | L: ${p.losses}</div>
+      <div class="player-points">Points: <strong>${p.points}</strong></div>
+      <div class="player-win">Win %: ${p.win_pct}%</div>
+    </div>`;
   });
-  html += '</tbody></table>';
+  html += '</div>';
   section.innerHTML = html;
 }
 
 function renderTeamStats(standings) {
   const section = document.getElementById('teamStatsSection');
-  let html = '<table class="team-table"><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>L</th><th>Pts</th><th>Win %</th></tr></thead><tbody>';
+  let html = '<div class="team-cards">';
   standings.forEach((t, i) => {
-    html += `<tr><td>${i + 1}</td><td>${t.team_name}</td><td>${t.matches_played}</td><td>${t.wins}</td><td>${t.losses}</td><td>${t.points}</td><td>${t.win_pct}%</td></tr>`;
+    html += `<div class="team-card">
+      <div class="team-rank">#${i + 1}</div>
+      <div class="team-name">${t.team_name}</div>
+      <div class="team-meta">MP: ${t.matches_played} | W: ${t.wins} | L: ${t.losses}</div>
+      <div class="team-points">Points: <strong>${t.points}</strong></div>
+      <div class="team-win">Win %: ${t.win_pct}%</div>
+    </div>`;
   });
-  html += '</tbody></table>';
+  html += '</div>';
   section.innerHTML = html;
 }
 
