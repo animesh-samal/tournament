@@ -26,8 +26,13 @@ async function fetchCSV(url){
 }
 
 // --- main data holders ---
-let players = []; // array of {player_id,name,...}
-let matches = []; // array of match rows
+const SUPABASE_URL = 'https://npdhqzlchdyydmwlfnnp.supabase.co'; // e.g. https://xxxx.supabase.co
+const SUPABASE_KEY = 'YOUR_SUPABASE_AeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wZGhxemxjaGR5eWRtd2xmbm5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTQ5NzIsImV4cCI6MjA3MzI3MDk3Mn0.s426RAQ6rhVgvQq_g4Xtyit6k9xHgw9MtEqZAWDkJ-0NON_KEY';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let players = [];
+let teams = [];
+let matches = [];
 
 // --- utility ---
 function idToName(id){
@@ -195,12 +200,18 @@ function renderPlayerSummary(playerId){
 }
 
 // --- main load ---
-async function loadAll(){
-  try{
+async function loadAll() {
+  try {
     document.getElementById('refreshBtn').disabled = true;
-    // fetch players and matches
-    players = await fetchCSV(PLAYERS_CSV_URL);
-    matches = await fetchCSV(MATCHES_CSV_URL);
+    const { data: pData, error: pErr } = await supabase.from('players').select('*');
+    if (pErr) throw pErr;
+    players = pData;
+    const { data: tData, error: tErr } = await supabase.from('teams').select('*');
+    if (tErr) throw tErr;
+    teams = tData;
+    const { data: mData, error: mErr } = await supabase.from('matches').select('*');
+    if (mErr) throw mErr;
+    matches = mData;
 
     const standings = computeStats();
     sortStandings(standings);
@@ -208,10 +219,10 @@ async function loadAll(){
     renderPlayerFilter(standings);
     renderMatches();
 
-  } catch(err){
-    alert('Error loading data: '+err.message);
+  } catch (err) {
+    alert('Error loading data: ' + err.message);
     console.error(err);
-  } finally{
+  } finally {
     document.getElementById('refreshBtn').disabled = false;
   }
 }
