@@ -138,12 +138,25 @@ function renderLeaderboard(standings) {
     th.className = 'form-header';
     thead.appendChild(th);
   }
+  // Add sticky classes to first two header columns
+  if (thead) {
+    const ths = thead.querySelectorAll('th');
+    if (ths[0]) ths[0].classList.add('sticky-col');
+    if (ths[1]) ths[1].classList.add('sticky-col-2');
+  }
   tbody.innerHTML = '';
   standings.forEach((p, i) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${p.name}</td>
+    // Add sticky classes to first two columns
+    const td1 = document.createElement('td');
+    td1.textContent = i + 1;
+    td1.className = 'sticky-col';
+    const td2 = document.createElement('td');
+    td2.textContent = p.name;
+    td2.className = 'sticky-col-2';
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.innerHTML += `
       <td>${p.matches_played}</td>
       <td>${p.wins}</td>
       <td>${p.losses}</td>

@@ -213,8 +213,34 @@ th{font-size:0.85rem;color:var(--muted)}
   #leaderboardTable th, #leaderboardTable td {
     white-space: nowrap;
     padding: 8px 8px;
+    position: relative;
+    z-index: 1;
+  }
+  #leaderboardTable th.sticky-col, #leaderboardTable td.sticky-col {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: 2px 0 6px -2px #e0e7ef;
+  }
+  #leaderboardTable th.sticky-col-2, #leaderboardTable td.sticky-col-2 {
+    position: sticky;
+    left: 48px;
+    background: #fff;
+    z-index: 2;
+    box-shadow: 2px 0 6px -2px #e0e7ef;
   }
   .form-td {
     min-width: 110px;
+  }
+  @media (max-width: 700px) {
+    #leaderboardTable th.sticky-col, #leaderboardTable td.sticky-col {
+      left: 0;
+      min-width: 44px;
+    }
+    #leaderboardTable th.sticky-col-2, #leaderboardTable td.sticky-col-2 {
+      left: 44px;
+      min-width: 110px;
+    }
   }
 }
