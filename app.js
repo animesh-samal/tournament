@@ -1,13 +1,25 @@
-
-
-
-
-
 // ====== Supabase config ======
 // Add this to your HTML: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 const SUPABASE_URL = 'https://npdhqzlchdyydmwlfnnp.supabase.co'; // e.g. https://xxxx.supabase.co
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wZGhxemxjaGR5eWRtd2xmbm5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTQ5NzIsImV4cCI6MjA3MzI3MDk3Mn0.s426RAQ6rhVgvQq_g4Xtyit6k9xHgw9MtEqZAWDkJ-0';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Test Supabase connection
+(async () => {
+  try {
+    const { data, error } = await supabase.from('players').select('*').limit(1);
+    if (error) {
+      console.error('Supabase test error:', error);
+      alert('Supabase connection error: ' + error.message);
+    } else {
+      console.log('Supabase test success, sample data:', data);
+      alert('Supabase connection successful!');
+    }
+  } catch (e) {
+    console.error('Supabase test exception:', e);
+    alert('Supabase test exception: ' + e.message);
+  }
+})();
 
 let players = [];
 let teams = [];
