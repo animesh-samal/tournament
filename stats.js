@@ -99,44 +99,49 @@ function sortStandings(arr) {
   });
 }
 
-function renderPlayerStats(standings) {
-  const section = document.getElementById('playerStatsSection');
-  let html = '<div class="player-cards">';
-  standings.forEach((p, i) => {
-    html += `<div class="player-card" data-player-id="${p.player_id}">
-      <div class="player-rank">#${i + 1}</div>
-      <div class="player-name">${p.name}</div>
-      <div class="player-details" style="display:none;"></div>
-    </div>`;
-  });
-  html += '</div>';
-  section.innerHTML = html;
-
-  // Add click event listeners for expansion
-  document.querySelectorAll('.player-card').forEach(card => {
-    card.addEventListener('click', function(e) {
-      if (e.target.closest('.player-details')) return;
-      const details = this.querySelector('.player-details');
-      if (details.style.display === 'none' || details.style.display === '') {
-        const pid = this.getAttribute('data-player-id');
-        const player = standings.find(p => p.player_id == pid);
-        details.innerHTML = `
-          <div class="player-details-content">
-            <hr style="margin:10px 0;">
-            <div><strong>Matches Played:</strong> ${player.matches_played}</div>
-            <div><strong>Wins:</strong> ${player.wins}</div>
-            <div><strong>Losses:</strong> ${player.losses}</div>
-            <div><strong>Points:</strong> ${player.points}</div>
-            <div><strong>Win %:</strong> ${player.win_pct}%</div>
-          </div>
-        `;
-        details.style.display = 'block';
-        this.classList.add('expanded');
-      } else {
-        details.style.display = 'none';
-        this.classList.remove('expanded');
+function renderPlayerStats(players) {
+  const playerStatsSection = document.getElementById('playerStatsSection');
+  playerStatsSection.innerHTML = '';
+  players.forEach((player, idx) => {
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    card.tabIndex = 0;
+    // Card header: rank and name on same line
+    const header = document.createElement('div');
+    header.className = 'player-card-header';
+    const rank = document.createElement('span');
+    rank.className = 'player-rank';
+    rank.textContent = `#${idx + 1}`;
+    const name = document.createElement('span');
+    name.className = 'player-name';
+    name.textContent = player.name;
+    header.appendChild(rank);
+    header.appendChild(name);
+    card.appendChild(header);
+    // Details section
+    const details = document.createElement('div');
+    details.className = 'player-details';
+    details.innerHTML = `
+      <div class="player-details-content">
+        <div><b>Matches:</b> ${player.matches}</div>
+        <div><b>Wins:</b> ${player.wins}</div>
+        <div><b>Losses:</b> ${player.losses}</div>
+        <div><b>Points:</b> ${player.points}</div>
+        <div><b>Win %:</b> ${player.winPercent}</div>
+      </div>
+    `;
+    card.appendChild(details);
+    // Expand/collapse logic
+    card.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A' || e.target.closest('a')) return;
+      card.classList.toggle('expanded');
+    });
+    card.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        card.classList.toggle('expanded');
       }
     });
+    playerStatsSection.appendChild(card);
   });
 }
 
