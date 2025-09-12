@@ -123,11 +123,11 @@ function renderPlayerStats(players) {
     details.className = 'player-details';
     details.innerHTML = `
       <div class="player-details-content">
-        <div><b>Matches:</b> ${player.matches}</div>
+        <div><b>Matches:</b> ${player.matches_played}</div>
         <div><b>Wins:</b> ${player.wins}</div>
         <div><b>Losses:</b> ${player.losses}</div>
         <div><b>Points:</b> ${player.points}</div>
-        <div><b>Win %:</b> ${player.winPercent}</div>
+        <div><b>Win %:</b> ${player.win_pct}</div>
       </div>
     `;
     card.appendChild(details);
