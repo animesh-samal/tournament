@@ -106,9 +106,6 @@ function renderPlayerStats(standings) {
     html += `<div class="player-card" data-player-id="${p.player_id}">
       <div class="player-rank">#${i + 1}</div>
       <div class="player-name">${p.name}</div>
-      <div class="player-meta">MP: ${p.matches_played} | W: ${p.wins} | L: ${p.losses}</div>
-      <div class="player-points">Points: <strong>${p.points}</strong></div>
-      <div class="player-win">Win %: ${p.win_pct}%</div>
       <div class="player-details" style="display:none;"></div>
     </div>`;
   });
@@ -118,11 +115,9 @@ function renderPlayerStats(standings) {
   // Add click event listeners for expansion
   document.querySelectorAll('.player-card').forEach(card => {
     card.addEventListener('click', function(e) {
-      // Prevent toggling if clicking inside details
       if (e.target.closest('.player-details')) return;
       const details = this.querySelector('.player-details');
       if (details.style.display === 'none' || details.style.display === '') {
-        // Fill in details
         const pid = this.getAttribute('data-player-id');
         const player = standings.find(p => p.player_id == pid);
         details.innerHTML = `
