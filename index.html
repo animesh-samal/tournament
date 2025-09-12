@@ -5,24 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Badminton Tournament Tracker</title>
   <link rel="stylesheet" href="styles.css">
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      fetch('navbar.html').then(r => r.text()).then(html => {
-        const nav = document.createElement('div');
-        nav.innerHTML = html;
-        document.body.insertBefore(nav, document.body.firstChild);
-      });
-    });
-  </script>
 </head>
 <body>
-  <!-- Navbar will be injected here -->
+  <nav class="main-navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-logo">🏸 Tournament</a>
+      <button class="navbar-toggle" aria-label="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <ul class="navbar-links">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="stats.html">STATS</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+        <li><a href="#gallery">GALLERY</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <header class="site-header">
-    <h1>Yamlok Badminton League</h1>
+    <h1>Badminton Tournament Tracker</h1>
+    <p class="subtitle">League + Knockout — weekly updates via Google Sheets</p>
   </header>
 
   <main class="container">
-    <!-- <section class="controls card">
+    <section class="controls card">
       <div>
         <label for="playerFilter">Filter by player:</label>
         <select id="playerFilter">
@@ -33,7 +41,7 @@
         <button id="refreshBtn">Refresh data</button>
         <button id="openSheetBtn">Open Google Sheet</button>
       </div>
-    </section> -->
+    </section>
 
     <section id="leaderboard" class="card">
       <h2>Leaderboard</h2>
@@ -95,31 +103,9 @@
     <a href="stats.html" class="btn-main">View Full Stats &rarr;</a>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-links">
-      <a href="#" id="scrollToTop">Scroll to Top &uarr;</a>
-      <span>|</span>
-      <a href="#contact">Contact Us</a>
-      <span>|</span>
-      <a href="#">Privacy Policy</a>
-      <span>|</span>
-      <a href="#">Terms and Conditions</a>
-    </div>
-    <div class="footer-copy">&copy; 2025 Yamlok Badminton League. All rights reserved.</div>
-  </footer>
+  <footer class="site-footer">Static site, Google Sheets as data source.</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="app.js"></script>
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var scrollBtn = document.getElementById('scrollToTop');
-  if (scrollBtn) {
-    scrollBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-});
-</script>
 </body>
 </html>
