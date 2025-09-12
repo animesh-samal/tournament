@@ -69,6 +69,45 @@ th{font-size:0.85rem;color:var(--muted)}
   font-size: 0.97rem;
   color: #0ea5a3;
 }
+.player-card {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.player-card.expanded {
+  box-shadow: 0 12px 32px rgba(14,165,163,0.18), 0 2px 12px rgba(0,0,0,0.13);
+  border-color: #2563eb;
+  background: linear-gradient(100deg,#f0f9ff 60%,#e0f2fe 100%);
+}
+.player-card .player-details {
+  width: 100%;
+  margin-top: 10px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.98rem;
+  color: #334155;
+  box-shadow: 0 1px 4px rgba(2,6,23,0.06);
+  transition: max-height 0.25s cubic-bezier(.4,2,.6,1), opacity 0.18s;
+}
+.player-card .player-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.player-card:after {
+  content: '\25BC';
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  font-size: 1.1em;
+  color: #94a3b8;
+  transition: transform 0.2s;
+}
+.player-card.expanded:after {
+  transform: rotate(180deg);
+  color: #2563eb;
+}
 @media (max-width:640px){.controls{flex-direction:column;align-items:stretch}.controls .buttons{display:flex;justify-content:flex-end}}
 @media (max-width: 700px) {
   .player-cards, .team-cards {

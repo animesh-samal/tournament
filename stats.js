@@ -103,16 +103,46 @@ function renderPlayerStats(standings) {
   const section = document.getElementById('playerStatsSection');
   let html = '<div class="player-cards">';
   standings.forEach((p, i) => {
-    html += `<div class="player-card">
+    html += `<div class="player-card" data-player-id="${p.player_id}">
       <div class="player-rank">#${i + 1}</div>
       <div class="player-name">${p.name}</div>
       <div class="player-meta">MP: ${p.matches_played} | W: ${p.wins} | L: ${p.losses}</div>
       <div class="player-points">Points: <strong>${p.points}</strong></div>
       <div class="player-win">Win %: ${p.win_pct}%</div>
+      <div class="player-details" style="display:none;"></div>
     </div>`;
   });
   html += '</div>';
   section.innerHTML = html;
+
+  // Add click event listeners for expansion
+  document.querySelectorAll('.player-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      // Prevent toggling if clicking inside details
+      if (e.target.closest('.player-details')) return;
+      const details = this.querySelector('.player-details');
+      if (details.style.display === 'none' || details.style.display === '') {
+        // Fill in details
+        const pid = this.getAttribute('data-player-id');
+        const player = standings.find(p => p.player_id == pid);
+        details.innerHTML = `
+          <div class="player-details-content">
+            <hr style="margin:10px 0;">
+            <div><strong>Matches Played:</strong> ${player.matches_played}</div>
+            <div><strong>Wins:</strong> ${player.wins}</div>
+            <div><strong>Losses:</strong> ${player.losses}</div>
+            <div><strong>Points:</strong> ${player.points}</div>
+            <div><strong>Win %:</strong> ${player.win_pct}%</div>
+          </div>
+        `;
+        details.style.display = 'block';
+        this.classList.add('expanded');
+      } else {
+        details.style.display = 'none';
+        this.classList.remove('expanded');
+      }
+    });
+  });
 }
 
 function renderTeamStats(standings) {
