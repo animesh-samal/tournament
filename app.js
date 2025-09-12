@@ -49,29 +49,37 @@ function computePlayerStats() {
       wins: 0,
       losses: 0,
       points: 0,
-      win_pct: 0
+      win_pct: 0,
+      form: [] // last 5 match results, newest last
     };
   });
-  matches.forEach(m => {
+  // Sort matches by date ascending (oldest first)
+  const sortedMatches = [...matches].sort((a, b) => (a.date || '').localeCompare(b.date));
+  // For each match, update stats and form
+  sortedMatches.forEach(m => {
     if (!m.winner_team_id) return;
     const winTeam = teams.find(t => t.id === m.winner_team_id);
     if (!winTeam) return;
     const loseTeamId = m.team_a_id === m.winner_team_id ? m.team_b_id : m.team_a_id;
     const loseTeam = teams.find(t => t.id === loseTeamId);
-    // Award points to winners
+    // Winners
     [winTeam.player1_id, winTeam.player2_id].forEach(pid => {
       if (map[pid]) {
         map[pid].matches_played += 1;
         map[pid].wins += 1;
         map[pid].points += 5;
+        map[pid].form.push('W');
+        if (map[pid].form.length > 5) map[pid].form.shift();
       }
     });
-    // Add matches played and losses to losers
+    // Losers
     if (loseTeam) {
       [loseTeam.player1_id, loseTeam.player2_id].forEach(pid => {
         if (map[pid]) {
           map[pid].matches_played += 1;
           map[pid].losses += 1;
+          map[pid].form.push('L');
+          if (map[pid].form.length > 5) map[pid].form.shift();
         }
       });
     }
@@ -123,6 +131,13 @@ function sortStandings(arr) {
 
 function renderLeaderboard(standings) {
   const tbody = document.querySelector('#leaderboardTable tbody');
+  const thead = document.querySelector('#leaderboardTable thead tr');
+  if (thead && !thead.querySelector('.form-header')) {
+    const th = document.createElement('th');
+    th.textContent = 'Form';
+    th.className = 'form-header';
+    thead.appendChild(th);
+  }
   tbody.innerHTML = '';
   standings.forEach((p, i) => {
     const tr = document.createElement('tr');
@@ -135,6 +150,19 @@ function renderLeaderboard(standings) {
       <td>${p.points}</td>
       <td>${p.win_pct}%</td>
     `;
+    // Form column
+    const tdForm = document.createElement('td');
+    tdForm.className = 'form-td';
+    tdForm.style.minWidth = '90px';
+    if (Array.isArray(p.form)) {
+      p.form.forEach(res => {
+        const span = document.createElement('span');
+        span.className = 'form-circle ' + (res === 'W' ? 'form-win' : 'form-loss');
+        span.textContent = res;
+        tdForm.appendChild(span);
+      });
+    }
+    tr.appendChild(tdForm);
     tbody.appendChild(tr);
   });
 }
