@@ -5,42 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Badminton Tournament Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // Load navbar before other scripts
+    async function loadNavbar() {
+      try {
+        const response = await fetch('navbar.html');
+        const html = await response.text();
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        const nav = temp.firstElementChild; // Get the nav element directly
+        document.body.insertBefore(nav, document.body.firstChild);
+        // Initialize navbar immediately after insertion
+        if (window.initializeNavbar) {
+          window.initializeNavbar();
+        }
+      } catch (err) {
+        console.error('Error loading navbar:', err);
+      }
+    }
+    loadNavbar();
+  </script>
 </head>
 <body>
-  <nav class="main-navbar">
-    <div class="navbar-container">
-      <a href="index.html" class="navbar-logo">🏸 Tournament</a>
-      <button class="navbar-toggle" aria-label="Toggle menu">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </button>
-      <ul class="navbar-links">
-        <li><a href="index.html">HOME</a></li>
-        <li><a href="stats.html">STATS</a></li>
-        <li><a href="#contact">CONTACT</a></li>
-        <li><a href="#gallery">GALLERY</a></li>
-      </ul>
+  <!-- Preloader -->
+  <div class="preloader-wrapper">
+    <div class="loader">
+      <div class="box box-1">
+        <div class="side-left"></div>
+        <div class="side-right"></div>
+        <div class="side-top"></div>
+      </div>
+      <div class="box box-2">
+        <div class="side-left"></div>
+        <div class="side-right"></div>
+        <div class="side-top"></div>
+      </div>
+      <div class="box box-3">
+        <div class="side-left"></div>
+        <div class="side-right"></div>
+        <div class="side-top"></div>
+      </div>
+      <div class="box box-4">
+        <div class="side-left"></div>
+        <div class="side-right"></div>
+        <div class="side-top"></div>
+      </div>
     </div>
-  </nav>
+  </div>
 
   <header class="site-header">
-    <h1>Badminton Tournament Tracker</h1>
-    <p class="subtitle">League + Knockout — weekly updates via Google Sheets</p>
+    <h1>Yamlok Badminton League</h1>
+    <p class="subtitle"></p>
   </header>
 
   <main class="container">
     <section class="controls card">
-      <div>
+      <!-- <div>
         <label for="playerFilter">Filter by player:</label>
         <select id="playerFilter">
           <option value="all">All players</option>
         </select>
-      </div>
-      <div class="buttons">
+      </div> -->
+      <!-- <div class="buttons">
         <button id="refreshBtn">Refresh data</button>
-        <button id="openSheetBtn">Open Google Sheet</button>
-      </div>
+        <button id="openSheetBtn">Open Supabase Dashboard</button>
+      </div> -->
     </section>
 
     <section id="leaderboard" class="card">
@@ -111,6 +140,7 @@
   <footer class="site-footer">Static site, Google Sheets as data source.</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="navbar.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -5,21 +5,25 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Test Supabase connection
-// (async () => {
-//   try {
-//     const { data, error } = await supabase.from('players').select('*').limit(1);
-//     if (error) {
-//       console.error('Supabase test error:', error);
-//       alert('Supabase connection error: ' + error.message);
-//     } else {
-//       console.log('Supabase test success, sample data:', data);
-//       alert('Supabase connection successful!');
-//     }
-//   } catch (e) {
-//     console.error('Supabase test exception:', e);
-//     alert('Supabase test exception: ' + e.message);
-//   }
-// })();
+(async () => {
+  try {
+    console.log('Testing Supabase connection...');
+    if (!window.supabase) {
+      throw new Error('Supabase client not initialized. Make sure the Supabase script is loaded.');
+    }
+    console.log('Supabase client initialized:', !!supabase);
+    const { data, error } = await supabase.from('players').select('*').limit(1);
+    if (error) {
+      console.error('Supabase test error:', error);
+      alert('Supabase connection error: ' + error.message);
+    } else {
+      console.log('Supabase test success, sample data:', data);
+    }
+  } catch (e) {
+    console.error('Supabase test exception:', e);
+    alert('Supabase test exception: ' + e.message);
+  }
+})();
 
 let players = [];
 let teams = [];
@@ -132,6 +136,12 @@ function sortStandings(arr) {
 function renderLeaderboard(standings) {
   const tbody = document.querySelector('#leaderboardTable tbody');
   const thead = document.querySelector('#leaderboardTable thead tr');
+  
+  if (!standings || standings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No leaderboard data available. Please check database connection.</td></tr>';
+    return;
+  }
+
   if (thead && !thead.querySelector('.form-header')) {
     const th = document.createElement('th');
     th.textContent = 'Form';
@@ -182,11 +192,14 @@ function renderLeaderboard(standings) {
 
 function renderPlayerFilter(standings) {
   const sel = document.getElementById('playerFilter');
-  sel.innerHTML = '<option value="all">All players</option>' + standings.map(p => `<option value="${p.player_id}">${p.name}</option>`).join('');
+  if (sel) {
+    sel.innerHTML = '<option value="all">All players</option>' + standings.map(p => `<option value="${p.player_id}">${p.name}</option>`).join('');
+  }
 }
 
 function renderMatches(filterPlayer = 'all') {
   const ul = document.getElementById('matches');
+  if (!ul) return;
   ul.innerHTML = '';
   let filtered = matches;
   if (filterPlayer !== 'all') {
@@ -265,15 +278,22 @@ function renderUpcomingMatches() {
 }
 
 function renderPlayerSummary(playerId) {
+  const playerSummary = document.getElementById('playerSummary');
+  const playerName = document.getElementById('playerName');
+  const playerStats = document.getElementById('playerStats');
+  
+  if (!playerSummary || !playerName || !playerStats) return;
+
   if (!playerId || playerId === 'all') {
-    document.getElementById('playerSummary').hidden = true;
+    playerSummary.hidden = true;
     return;
   }
   const p = computePlayerStats().find(x => x.player_id == playerId);
   if (!p) return;
-  document.getElementById('playerSummary').hidden = false;
-  document.getElementById('playerName').textContent = p.name + ' — Summary';
-  document.getElementById('playerStats').innerHTML = `
+  
+  playerSummary.hidden = false;
+  playerName.textContent = p.name + ' — Summary';
+  playerStats.innerHTML = `
     <ul>
       <li>Matches played: ${p.matches_played}</li>
       <li>Wins: ${p.wins}</li>
@@ -285,53 +305,108 @@ function renderPlayerSummary(playerId) {
 }
 
 // --- main load ---
-async function loadAll() {
-  try {
-    document.getElementById('refreshBtn').disabled = true;
-    // fetch players, teams, matches from Supabase
-    const { data: pData, error: pErr } = await supabase.from('players').select('*');
-    if (pErr) throw pErr;
-    players = pData;
-    const { data: tData, error: tErr } = await supabase.from('teams').select('*');
-    if (tErr) throw tErr;
-    teams = tData;
-    const { data: mData, error: mErr } = await supabase.from('matches').select('*');
-    if (mErr) throw mErr;
-    matches = mData;
-    const standings = computePlayerStats();
-    sortStandings(standings);
-    renderLeaderboard(standings);
-    renderPlayerFilter(standings);
-    renderMatches();
-    renderUpcomingMatches(); // <-- add this line
-  } catch (err) {
-    alert('Error loading data: ' + err.message);
-    console.error(err);
-  } finally {
-    document.getElementById('refreshBtn').disabled = false;
+function showPreloader() {
+  const preloader = document.querySelector('.preloader-wrapper');
+  if (preloader) {
+    preloader.classList.remove('hidden');
   }
 }
 
-document.getElementById('refreshBtn').addEventListener('click', loadAll);
-document.getElementById('playerFilter').addEventListener('change', (e) => {
-  const pid = e.target.value;
-  renderMatches(pid);
-  renderPlayerSummary(pid);
-});
+function hidePreloader() {
+  const preloader = document.querySelector('.preloader-wrapper');
+  if (preloader) {
+    preloader.classList.add('hidden');
+  }
+}
 
-document.getElementById('openSheetBtn').addEventListener('click', () => {
-  window.open('https://app.supabase.com/project', '_blank');
-});
+async function loadAll() {
+  try {
+    showPreloader();
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.disabled = true;
+    }
+    // fetch players, teams, matches from Supabase
+    console.log('Loading players...');
+    const { data: pData, error: pErr } = await supabase.from('players').select('*');
+    if (pErr) throw pErr;
+    if (!pData || pData.length === 0) {
+      console.warn('No players found in database');
+    }
+    players = pData;
+    console.log('Players loaded:', players);
 
-document.addEventListener('DOMContentLoaded', function() {
-  const toggle = document.querySelector('.navbar-toggle');
-  const links = document.querySelector('.navbar-links');
-  if (toggle && links) {
-    toggle.addEventListener('click', function() {
-      links.classList.toggle('open');
+    console.log('Loading teams...');
+    const { data: tData, error: tErr } = await supabase.from('teams').select('*');
+    if (tErr) throw tErr;
+    if (!tData || tData.length === 0) {
+      console.warn('No teams found in database');
+    }
+    teams = tData;
+    console.log('Teams loaded:', teams);
+
+    console.log('Loading matches...');
+    const { data: mData, error: mErr } = await supabase.from('matches').select('*');
+    if (mErr) throw mErr;
+    if (!mData || mData.length === 0) {
+      console.warn('No matches found in database');
+    }
+    matches = mData;
+    console.log('Matches loaded:', matches);
+    const standings = computePlayerStats();
+    sortStandings(standings);
+    renderLeaderboard(standings);
+    
+    // Only call these if needed (when elements exist)
+    if (document.getElementById('playerFilter')) {
+      renderPlayerFilter(standings);
+    }
+    if (document.getElementById('matches')) {
+      renderMatches();
+    }
+    if (document.getElementById('upcomingMatchesList')) {
+      renderUpcomingMatches();
+    }
+  } catch (err) {
+    console.error('Error loading data:', err);
+    const tbody = document.querySelector('#leaderboardTable tbody');
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: #ef4444;">Error loading data: ${err.message}</td></tr>`;
+    }
+  } finally {
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+    }
+    // Hide preloader after a slight delay to ensure smooth transition
+    setTimeout(hidePreloader, 500);
+  }
+}
+
+// Wait for DOM to be loaded before setting up event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const refreshBtn = document.getElementById('refreshBtn');
+  const playerFilter = document.getElementById('playerFilter');
+  const openSheetBtn = document.getElementById('openSheetBtn');
+
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', loadAll);
+  }
+
+  if (playerFilter) {
+    playerFilter.addEventListener('change', (e) => {
+      const pid = e.target.value;
+      renderMatches(pid);
+      renderPlayerSummary(pid);
     });
   }
-});
 
-// initial load
-loadAll();
+  if (openSheetBtn) {
+    openSheetBtn.addEventListener('click', () => {
+      window.open('https://app.supabase.com/project/npdhqzlchdyydmwlfnnp', '_blank');
+    });
+  }
+
+  // initial load
+  loadAll();
+});

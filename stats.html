@@ -6,13 +6,24 @@
   <title>Stats | Badminton Tournament Tracker</title>
   <link rel="stylesheet" href="styles.css">
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      fetch('navbar.html').then(r => r.text()).then(html => {
-        const nav = document.createElement('div');
-        nav.innerHTML = html;
+    // Load navbar before other scripts
+    async function loadNavbar() {
+      try {
+        const response = await fetch('navbar.html');
+        const html = await response.text();
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        const nav = temp.firstElementChild; // Get the nav element directly
         document.body.insertBefore(nav, document.body.firstChild);
-      });
-    });
+        // Initialize navbar immediately after insertion
+        if (window.initializeNavbar) {
+          window.initializeNavbar();
+        }
+      } catch (err) {
+        console.error('Error loading navbar:', err);
+      }
+    }
+    loadNavbar();
   </script>
 </head>
 <body>
@@ -35,6 +46,7 @@
   </main>
   <footer class="site-footer">====YBL  2025-26 ====</footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="navbar.js"></script>
   <script src="tournament.js"></script>
   <script src="stats.js"></script>
 </body>
