@@ -165,32 +165,52 @@ th{font-size:0.85rem;color:var(--muted)}
 }
 .main-navbar {
   width: 100%;
-  background: linear-gradient(90deg,#06b6d4, #3b82f6);
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(2,6,23,0.07);
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .navbar-container {
-  max-width: 980px;
+  max-width: 1080px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 18px;
-  height: 54px;
+  padding: 0 24px;
+  height: 64px;
 }
 .navbar-logo {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   color: #fff;
   text-decoration: none;
-  letter-spacing: 1px;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding: 6px 0;
+}
+.navbar-logo:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: width 0.2s ease;
+}
+.navbar-logo:hover:after {
+  width: 100%;
 }
 .navbar-links {
   display: flex;
-  gap: 22px;
+  gap: 32px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -199,33 +219,42 @@ th{font-size:0.85rem;color:var(--muted)}
   color: #fff;
   text-decoration: none;
   font-size: 1.05rem;
-  font-weight: 500;
-  padding: 8px 10px;
-  border-radius: 6px;
-  transition: background 0.18s, color 0.18s;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  letter-spacing: 0.3px;
 }
 .navbar-links li a:hover {
-  background: rgba(255,255,255,0.13);
-  color: #f0f9ff;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+.navbar-links li a.active {
+  background: rgba(255, 255, 255, 0.2);
 }
 .navbar-toggle {
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 38px;
-  height: 38px;
-  background: none;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   cursor: pointer;
-  padding: 0;
-  margin-left: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.navbar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 .navbar-toggle .bar {
-  width: 26px;
-  height: 3px;
+  width: 24px;
+  height: 2px;
   background: #fff;
-  margin: 4px 0;
+  margin: 3px 0;
   border-radius: 2px;
   transition: 0.3s;
 }

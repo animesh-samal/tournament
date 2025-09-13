@@ -5,21 +5,21 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Test Supabase connection
-(async () => {
-  try {
-    const { data, error } = await supabase.from('players').select('*').limit(1);
-    if (error) {
-      console.error('Supabase test error:', error);
-      alert('Supabase connection error: ' + error.message);
-    } else {
-      console.log('Supabase test success, sample data:', data);
-      alert('Supabase connection successful!');
-    }
-  } catch (e) {
-    console.error('Supabase test exception:', e);
-    alert('Supabase test exception: ' + e.message);
-  }
-})();
+// (async () => {
+//   try {
+//     const { data, error } = await supabase.from('players').select('*').limit(1);
+//     if (error) {
+//       console.error('Supabase test error:', error);
+//       alert('Supabase connection error: ' + error.message);
+//     } else {
+//       console.log('Supabase test success, sample data:', data);
+//       alert('Supabase connection successful!');
+//     }
+//   } catch (e) {
+//     console.error('Supabase test exception:', e);
+//     alert('Supabase test exception: ' + e.message);
+//   }
+// })();
 
 let players = [];
 let teams = [];
